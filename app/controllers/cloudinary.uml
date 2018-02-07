@@ -1,0 +1,12 @@
+@startuml
+title Cloudinary Integration Flow with JS Library(cloudinary_js)\nDetails :
+https://github.com/cloudinary/cloudinary_js
+participant Extension as &quot;ExactNote Browser\nExtension&quot;
+participant API as &quot;Cloudinary API&quot;
+Extension -&gt; API: **On Image upload/annotate**\nCall Cloudinary API\nvar cl =
+cloudinary.Cloudinary.new();\nSimple URL : cl.url(&quot;sample&quot;)\nCropped URL : cl.url(
+&quot;sample&quot;, { width: 100, crop: &quot;fit&quot;})\nGenerate HTML TAG : cl.image(&quot;sample&quot;)
+Extension &lt;- API: Response contains image url or html tag depending on the function
+called\nFor example, http://res.cloudinary.com/demo/image/upload/sample
+
+@enduml

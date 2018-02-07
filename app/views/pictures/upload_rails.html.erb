@@ -1,0 +1,83 @@
+<%= cloudinary_js_config %>
+
+
+	<script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.10.3/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.iframe-transport/1.0.1/jquery.iframe-transport.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.19.1/js/jquery.fileupload.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cloudinary-jquery-file-upload/2.3.0/cloudinary-jquery-file-upload.min.js"></script> 
+
+
+<!-- 
+When uploading is completed, the identifier of the uploaded image is set as the value of a hidden input field of your selected name (e.g., image_id in the example above).
+
+You can then process the identifier received by your Rails controller and store it in your model for future use, exactly as if you're using a standard server side uploading.
+
+-->
+<%= form_tag(pictures_path, :method => :post, :class => 'upload_form') do  %>
+  
+  <%= label_tag :image_name %>
+  <%= text_field_tag :name, '', :required => true,:placeholder => 'Enter Image Name' %>
+	<br/>
+
+	By Rails Tag :   	<%= cl_image_upload_tag(:image_id, :version => Time.now.strftime('%Y%m%d%S')) %>
+
+	<br/><br/>
+
+	By JQuery Signed WIP: <input name="file" data-url="https://api.cloudinary.com/v1_1/pandey/auto/upload" data-form-data="<%= @signedRequest %>" data-cloudinary-field="image_id" class="cloudinary-fileupload" type="file">
+
+	<br/><br/>
+
+	By JQuery Unsigned : <div id="upload_preset"></div>
+	<br/><br/>
+
+    <%= submit_tag 'SAVE IMAGE' %> 
+<% end %>
+<br/><br/>
+<% if @pictures.present? %>
+	<% @pictures.each do |p| %>
+		Name : <%= p.name %> <br/>
+		Image : <%= cl_image_tag(p.path, :width => 150, :height => 150) if p.path.present? %><br/>
+		<%#= p.path %><br/>
+	<% end %>
+<% else %>
+	<p>No Images Uploaded Yet</p>
+<% end %>
+
+<script type="text/javascript">
+	$(function() {
+	  if($.fn.cloudinary_fileupload !== undefined) {
+	    $("input.cloudinary-fileupload[type=file]").cloudinary_fileupload();
+	  }
+	});
+
+//unsigned fp1diqal
+//signed tlcpsbdm
+
+$('#upload_preset').append($.cloudinary.unsigned_upload_tag("fp1diqal", 
+  { cloud_name: 'pandey' }));
+/*
+	$.ajax({
+        url : '/pictures/generate_signature',
+        type : 'POST',
+        success : function(response) {
+            //console.log("aaa");
+            //console.log(response);
+            //alert(response.data.api_key)
+            var signature = response.data.signature;
+            var api_key = response.data.api_key;
+            var timestamp1 = response.data.timestamp;
+            var public_id = response.data.public_id;
+			var data = { "timestamp":  timestamp1, 
+	          "callback": "http://localhost:3000/cloudinary_cors.html",
+	          "signature": signature, 
+	          "api_key": api_key,
+	          "public_id": public_id
+	      	};
+	        console.log(data);
+
+	        $('.cloudinary-fileupload').attr('data-form-data', JSON.stringify(data));
+        }
+    });
+*/
+</script>

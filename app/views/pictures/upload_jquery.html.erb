@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Jquery Direct Upload</title>
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.10.3/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.iframe-transport/1.0.1/jquery.iframe-transport.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.19.1/js/jquery.fileupload.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cloudinary-jquery-file-upload/2.3.0/cloudinary-jquery-file-upload.min.js"></script> 
+</head>
+<body>
+
+
+<form action="/pictures" accept-charset="UTF-8" method="POST" class="upload_form">
+<label>Image Name</label>
+	<input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+
+	<input type="text" name="name" required="true" id="name" placeholder="Enter Image Name">
+	<input name="file" type="file" id="uploadinput"
+	       class="cloudinary-fileupload" data-cloudinary-field="image_upload" data-url="https://api.cloudinary.com/v1_1/pandey/auto/upload" data-cloudinary-field="image_id"
+	       data-form-data="" >
+	       	
+	</input>
+
+	<input type="submit" name="commit" value="SAVE">
+</form>
+
+<script type="text/javascript">
+   $.cloudinary.config({"api_key":"878775919695188","cloud_name":"pandey"});
+</script> 
+
+<script type="text/javascript">
+$(function() {
+	  if($.fn.cloudinary_fileupload !== undefined) {
+	    $("input.cloudinary-fileupload[type=file]").cloudinary_fileupload();
+	  }
+	});
+
+$('.upload_form').append($.cloudinary.unsigned_upload_tag("zcudy0uz", 
+  { cloud_name: 'pandey' }));
+
+
+$('.upload_field').unsigned_cloudinary_upload("zcudy0uz", 
+  { cloud_name: 'pandey', tags: 'browser_uploads' }, 
+  { multiple: true }
+).bind('cloudinarydone', function(e, data) {
+
+  $('.thumbnails').append($.cloudinary.image(data.result.public_id, 
+    { format: 'jpg', width: 150, height: 100, 
+      crop: 'thumb', gravity: 'face', effect: 'saturation:50' } ))}
+
+).bind('cloudinaryprogress', function(e, data) { 
+
+  $('.progress_bar').css('width', 
+    Math.round((data.loaded * 100.0) / data.total) + '%'); 
+
+});
+
+
+$.ajax({
+        url : '/pictures/generate_signature',
+        type : 'POST',
+        success : function(response) {
+            //console.log("aaa");
+            //console.log(response);
+            //alert(response.data.api_key)
+            var signature = response.data.signature;
+            var api_key = response.data.api_key;
+            var timestamp1 = response.data.timestamp;
+			var data = { "timestamp":  timestamp1, 
+	          "callback": "http://localhost:3000/cloudinary_cors.html",
+	          "signature": signature, 
+	          "api_key": api_key };
+	        //console.log(data);
+
+	        $('#uploadinput').attr('data-form-data', JSON.stringify(data));
+        }
+    });
+
+$('.cloudinary-fileupload').bind('cloudinarydone', function(e, data) {  $('.preview').html(
+       $.cloudinary.image(data.result.public_id, 
+           { format: data.result.format, version: data.result.version, 
+             crop: 'scale', width: 200 }));    
+       $('.image_public_id').val(data.result.public_id);    
+  return true;
+});
+
+</script>
+</body>
+</html>

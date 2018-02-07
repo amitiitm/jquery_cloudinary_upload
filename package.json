@@ -1,0 +1,25 @@
+{
+  "name": "jquery-direct-upload",
+  "version": "1.0.0",
+  "description": "jquery_upload_image",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "blueimp-file-upload": "^9.19.1",
+    "cloudinary-jquery": "^2.3.0",
+    "cloudinary-jquery-file-upload": "^2.3.0",
+    "jquery": "^3.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@gitlab.exactnote.com:10022/en-example/jquery-direct-upload.git"
+  },
+  "author": "Sunil",
+  "license": "ISC"
+}

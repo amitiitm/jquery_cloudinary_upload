@@ -1,0 +1,19 @@
+---
+development:
+  cloud_name: pandey
+  api_key: '878775919695188'
+  api_secret: HLYSNRG2IgqXZo3PGgyTmH8IKB0
+  enhance_image_tag: true
+  static_image_support: false
+production:
+  cloud_name: pandey
+  api_key: '878775919695188'
+  api_secret: HLYSNRG2IgqXZo3PGgyTmH8IKB0
+  enhance_image_tag: true
+  static_image_support: true
+test:
+  cloud_name: pandey
+  api_key: '878775919695188'
+  api_secret: HLYSNRG2IgqXZo3PGgyTmH8IKB0
+  enhance_image_tag: true
+  static_image_support: false
